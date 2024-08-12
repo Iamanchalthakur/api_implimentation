@@ -8,7 +8,7 @@ const User = function(user) {
 };
 
 User.create = (newUser, result) => {
-  sql.query("INSERT INTO tutorials SET ?", newUser, (err, res) => {
+  sql.query("INSERT INTO users SET ?", newUser, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -34,7 +34,7 @@ User.findById = (id, result) => {
       return;
     }
 
-    // not found Tutorial with the id
+    // not found User with the id
     result({ kind: "not_found" }, null);
   });
 };
@@ -71,10 +71,10 @@ User.getAllPublished = result => {
   });
 };
 
-User.updateById = (id, users, result) => {
+User.updateById = (id, user, result) => {
   sql.query(
     "UPDATE users SET name = ?, age = ?, published = ? WHERE id = ?",
-    [tutorial.name, tutorial.age, tutorial.published, id],
+    [user.name, user.age, user.published, id],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -83,12 +83,12 @@ User.updateById = (id, users, result) => {
       }
 
       if (res.affectedRows == 0) {
-        // not found Tutorial with the id
+        // not found User with the id
         result({ kind: "not_found" }, null);
         return;
       }
 
-      console.log("updated tutorial: ", { id: id, ...user });
+      console.log("updated user: ", { id: id, ...user });
       result(null, { id: id, ...user });
     }
   );
@@ -103,7 +103,7 @@ User.remove = (id, result) => {
     }
 
     if (res.affectedRows == 0) {
-      // not found Tutorial with the id
+      // not found User with the id
       result({ kind: "not_found" }, null);
       return;
     }

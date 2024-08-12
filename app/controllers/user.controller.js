@@ -11,7 +11,7 @@ exports.create = (req, res) => {
 
   // Create a User
   console.log("msg============",req.body);
-  const tutorial = new User({
+  const user = new User({
     name: req.body.name,
     age: req.body.age,
     published: req.body.published || false
