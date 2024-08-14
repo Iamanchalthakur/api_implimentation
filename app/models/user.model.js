@@ -1,10 +1,13 @@
 const sql = require("./db.js");
+const bcrypt = require("bcryptjs");
 
 // constructor
-const User = function(user) {
-  this.name = user.name;
-  this.age = user.age;
+const User = function (user) {
+  console.log("user========", user);
+  (this.full_name = user.full_name), (this.age = user.age);
   this.published = user.published;
+  this.email = user.email;
+  this.password = user.password;
 };
 
 User.create = (newUser, result) => {
@@ -58,7 +61,7 @@ User.getAll = (name, result) => {
   });
 };
 
-User.getAllPublished = result => {
+User.getAllPublished = (result) => {
   sql.query("SELECT * FROM users WHERE published=true", (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -72,9 +75,10 @@ User.getAllPublished = result => {
 };
 
 User.updateById = (id, user, result) => {
+  const fullName = `${user.first_name} ${user.last_name}`;
   sql.query(
-    "UPDATE users SET name = ?, age = ?, published = ? WHERE id = ?",
-    [user.name, user.age, user.published, id],
+    "UPDATE users SET full_name = ?, age = ?, published = ? WHERE id = ?",
+    [fullName, user.age, user.published, id],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -113,7 +117,7 @@ User.remove = (id, result) => {
   });
 };
 
-User.removeAll = result => {
+User.removeAll = (result) => {
   sql.query("DELETE FROM users", (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -124,6 +128,32 @@ User.removeAll = result => {
     console.log(`deleted ${res.affectedRows} users`);
     result(null, res);
   });
+};
+
+User.login = (payload, result) => {
+  console.log("payload=======", payload);
+  sql.query(
+    `SELECT * FROM users WHERE email = "${payload.email}" and password = "${payload.password}"`,
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+
+        result(err, null);
+        return;
+      }
+
+      if (res.length) {
+        // bcrypt.compare(payload.password)
+        console.log("found user: ", res);
+        console.log("not found user: ", res[0]);
+        result(null, res[0]);
+        return;
+      }
+
+      // not found User with the email
+      result({ kind: "not_found" }, null);
+    }
+  );
 };
 
 module.exports = User;
