@@ -216,3 +216,65 @@ exports.login = async (req, res) => {
     token,
   });
 };
+
+console.log("token=========================");
+
+
+
+exports.profile = async (req, res) => {
+  console.log("Profile endpoint reached"); // Debugging log
+  try {
+    // Extract the token from the Authorization header
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      console.log("Authorization header missing====================");
+      return res.status(401).send({ message: "Authorization header missing" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    if (!token) {
+      console.log("Token missing in header======================");
+      return res.status(401).send({ message: "Token missing" });
+    }
+
+    // Verify the token and extract the user ID
+    let decoded;
+    try {
+      decoded = jwt.verify(token, JWT_SECRET);
+    } catch (err) {
+      console.log("Token verification failed:", err.message);
+      return res.status(401).send({ message: "Invalid or expired token" });
+    }
+
+    const userId = decoded.id;
+    console.log("Decoded Token================", decoded);
+
+    if (!userId) {
+      console.log("User ID not found in token");
+      return res.status(401).send({ message: "Invalid token" });
+    }
+
+    console.log("Decoded User id==========:", userId); 
+
+    // Query the database to find the user by ID
+    User.profile(userId, (err, user) => {
+      if (err) {
+        console.log("Database error: ", err);
+        return res.status(500).send({ message: "Database error" });
+      }
+
+      // Handle the case where no user is found
+      if (!user) {
+        return res.status(404).send({ message: `Not found User with id ${userId}.` });
+      }
+
+      // Send the user's profile information as a response
+      res.send({ message: "User profile retrieved successfully", user });
+    });
+  } catch (error) {
+    console.log("Error:", error.message);
+    res.status(500).send({ message: "Error retrieving user profile.", error: error.message });
+  }
+};
+
+

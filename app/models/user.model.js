@@ -10,6 +10,7 @@ const User = function (user) {
   this.password = user.password;
 };
 
+
 User.create = (newUser, result) => {
   sql.query("INSERT INTO users SET ?", newUser, (err, res) => {
     if (err) {
@@ -19,6 +20,7 @@ User.create = (newUser, result) => {
     }
 
     console.log("created user: ", { id: res.insertId, ...newUser });
+    delete newUser['password'];
     result(null, { id: res.insertId, ...newUser });
   });
 };
@@ -143,7 +145,6 @@ User.login = (payload, result) => {
       }
 
       if (res.length) {
-        // bcrypt.compare(payload.password)
         console.log("found user: ", res);
         console.log("not found user: ", res[0]);
         result(null, res[0]);
@@ -155,5 +156,27 @@ User.login = (payload, result) => {
     }
   );
 };
+
+User.profile = (id, result) => {
+  sql.query("SELECT id, email, full_name FROM users WHERE id = ?", [id], (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length > 0) {
+      console.log("user: ", res[0]);
+      result(null, res[0]);
+    } else {
+      console.log("No user found with id ", id);
+      result({ kind: "not_found" }, null);
+    }
+  });
+};
+
+
+
+
 
 module.exports = User;
