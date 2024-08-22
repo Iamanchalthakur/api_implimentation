@@ -225,15 +225,17 @@ exports.profile = async (req, res) => {
   console.log("Profile endpoint reached"); // Debugging log
   try {
     // Extract the token from the Authorization header
-    const authHeader = req.headers.authorization;
+    const authHeader = req.headers['x-token'];
+
+
     if (!authHeader) {
-      console.log("Authorization header missing====================");
       return res.status(401).send({ message: "Authorization header missing" });
     }
 
     const token = authHeader.split(" ")[1];
+   
+
     if (!token) {
-      console.log("Token missing in header======================");
       return res.status(401).send({ message: "Token missing" });
     }
 

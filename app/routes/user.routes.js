@@ -3,6 +3,7 @@ module.exports = app => {
   
     var router = require("express").Router();
     
+    
 
     // Login a new User
     router.post("/login", users.login);
@@ -15,6 +16,9 @@ module.exports = app => {
   
     // Retrieve all published User
     router.get("/published", users.findAllPublished);
+  //get user profile  
+
+  router.get("/profile", users.profile);
   
     // Retrieve a single users with id
     router.get("/:id", users.findOne);
@@ -28,8 +32,7 @@ module.exports = app => {
     // Delete all users
     router.delete("/", users.deleteAll);
 
-    //get user profile  
-    // router.get("/profile", users.profile);
+    
 
     
   
