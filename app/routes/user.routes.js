@@ -1,12 +1,13 @@
 module.exports = app => {
     const users = require("../controllers/user.controller.js");
-  
+ 
     var router = require("express").Router();
+    const { validateUserName, checkTokenRequired } = require("../utils/middleware/role.middleware.js");
     
     
 
     // Login a new User
-    router.post("/login", users.login);
+    router.post("/login", validateUserName, users.login);
   
     // Create a new User
     router.post("/", users.create);

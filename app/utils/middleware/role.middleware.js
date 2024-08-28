@@ -1,4 +1,4 @@
-const Role = require('../models/role.model'); 
+const Role = require('../../models/role.model'); 
 
 
 const validateRoleName = (req, res, next) => {

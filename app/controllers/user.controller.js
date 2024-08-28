@@ -46,7 +46,6 @@ exports.create = async (req, res) => {
 
     user.password = await bcrypt.hash(req.body.password, 10);
 
-    console.log("userpasswprd=========================", user.password);
 
     // Save User in the database
     User.create(user, (err, data) => {
@@ -217,23 +216,17 @@ exports.login = async (req, res) => {
   });
 };
 
-console.log("token=========================");
-
-
-
 exports.profile = async (req, res) => {
   console.log("Profile endpoint reached"); // Debugging log
   try {
     // Extract the token from the Authorization header
-    const authHeader = req.headers['x-token'];
-
+    const authHeader = req.headers["x-token"];
 
     if (!authHeader) {
       return res.status(401).send({ message: "Authorization header missing" });
     }
 
     const token = authHeader.split(" ")[1];
-   
 
     if (!token) {
       return res.status(401).send({ message: "Token missing" });
@@ -249,14 +242,11 @@ exports.profile = async (req, res) => {
     }
 
     const userId = decoded.id;
-    console.log("Decoded Token================", decoded);
 
     if (!userId) {
       console.log("User ID not found in token");
       return res.status(401).send({ message: "Invalid token" });
     }
-
-    console.log("Decoded User id==========:", userId); 
 
     // Query the database to find the user by ID
     User.profile(userId, (err, user) => {
@@ -267,7 +257,9 @@ exports.profile = async (req, res) => {
 
       // Handle the case where no user is found
       if (!user) {
-        return res.status(404).send({ message: `Not found User with id ${userId}.` });
+        return res
+          .status(404)
+          .send({ message: `Not found User with id ${userId}.` });
       }
 
       // Send the user's profile information as a response
@@ -275,8 +267,11 @@ exports.profile = async (req, res) => {
     });
   } catch (error) {
     console.log("Error:", error.message);
-    res.status(500).send({ message: "Error retrieving user profile.", error: error.message });
+    res
+      .status(500)
+      .send({
+        message: "Error retrieving user profile.",
+        error: error.message,
+      });
   }
 };
-
-

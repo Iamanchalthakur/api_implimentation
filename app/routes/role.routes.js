@@ -1,6 +1,6 @@
 module.exports = app => {
   const roles = require("../controllers/role.controller.js");
-  const { validateRoleName, checkTokenRequired } = require("../utils/role.middleware.js");
+  const { validateRoleName, checkTokenRequired } = require("../utils/middleware/role.middleware.js");
 
   var router = require("express").Router();
 

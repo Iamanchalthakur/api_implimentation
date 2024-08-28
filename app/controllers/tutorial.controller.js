@@ -10,11 +10,11 @@ exports.create = (req, res) => {
   }
 
   // Create a Tutorial
-  console.log("msg============",req.body);
   const tutorial = new Tutorial({
     title: req.body.title,
     description: req.body.description,
-    published: req.body.published || false
+    published: req.body.published || false,
+    user_id: req.body.user_id
   });
 
   // Save Tutorial in the database
@@ -129,3 +129,15 @@ exports.deleteAll = (req, res) => {
     else res.send({ message: `All Tutorials were deleted successfully!` });
   });
 };
+
+
+exports.getTutorialsWithUseDeatils = (req,res) => {
+  Tutorial.getTutorialsWithUseDeatils((err, data) => {
+    if (err)
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while getting tutorials with user details."
+      });
+    else res.send(data);
+  });
+}

@@ -1,0 +1,30 @@
+{
+    
+    "dev": {
+        "driver": "mysql",
+        "host": "localhost",
+        "user": "root",
+        "password": "Anchal@0027",
+        "database": "dummydb",
+        "port": "3306",
+        "multipleStatements": true
+      },
+
+
+
+      "prod": {
+        "driver": "mysql",
+        "host"     : "",
+        "user"     : "medeadmin",
+        "password" : "",
+        "database" : "medewerke",
+        "port"     : "3306",
+        "multipleStatements": true
+      }
+
+
+      
+
+    }
+
+   

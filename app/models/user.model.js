@@ -45,11 +45,7 @@ User.findById = (id, result) => {
 };
 
 User.getAll = (name, result) => {
-  let query = "SELECT * FROM users";
-
-  if (name) {
-    query += ` WHERE title LIKE '%${title}%'`;
-  }
+  let query = "SELECT users.id as user_id, users.full_name, tutorials.id, tutorials.title, tutorials.description FROM users LEFT JOIN tutorials ON users.id = tutorials.user_id";
 
   sql.query(query, (err, res) => {
     if (err) {
@@ -57,9 +53,31 @@ User.getAll = (name, result) => {
       result(null, err);
       return;
     }
+    console.log("result-===========", )
+    
+    const usersMap = {};
+    res.forEach(row => {
+      if (!usersMap[row.user_id]) {
+        usersMap[row.user_id] = {
+          username: row.full_name,
+          user_id: row.id,
+          tutorials: [],
+        };
+      }
 
-    console.log("users: ", res);
-    result(null, res);
+      if (row.tutorial_id !== null) {
+        usersMap[row.user_id].tutorials.push({
+          tutorial_id: row.id,
+          title: row.title,
+          content: row.description,
+          // add more tutorial fields here if needed
+        });
+      }
+    });
+    const usersList = Object.values(usersMap);
+
+    console.log("users: ", usersList);
+    result(null, usersList);
   });
 };
 
